@@ -12,9 +12,8 @@ exports.getFile = async (req, res) => {
     const file = xlsx.readFile(`./uploads/${filename}`);
     const sheets = file.SheetNames;
     let data = [];
-    const temp = xlsx.utils.sheet_to_json(file.Sheets["Sheet1"]);
-    temp.forEach((val) => data.push(val));
-    res.status(200).json({ file: data, filename });
+    const temp = xlsx.utils.sheet_to_csv(file.Sheets["Sheet1"]);
+    res.status(200).json({ file: temp, filename });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong!" });
