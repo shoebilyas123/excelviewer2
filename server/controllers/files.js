@@ -35,16 +35,16 @@ exports.getFileList = async (req, res) => {
 
 exports.updateFileContent = async (req, res) => {
   try {
-    const { filename, newFileData, rowsToDelete, rowsToInsert } = req.body;
+    const { filename, newFileData, rowsToDelete, rowsToInsert, colToDelete } =
+      req.body;
 
     if (
       newFileData.length === 0 &&
       rowsToDelete.length === 0 &&
-      rowsToInsert.length === 0
+      rowsToInsert.length === 0 &&
+      colToDelete.length === 0
     ) {
-      return res
-        .status(200)
-        .json({ message: "Updated the worksheet successfully!" });
+      return res.status(200).json({ message: "File already up-to-date" });
     }
 
     let workbook = new Excel.Workbook();
@@ -65,6 +65,10 @@ exports.updateFileContent = async (req, res) => {
 
     rowsToDelete.forEach((rowValue) => {
       worksheet.spliceRows(rowValue, 1);
+    });
+
+    colToDelete.forEach((colValue) => {
+      worksheet.spliceColumns(colValue + 1, 1);
     });
 
     workbook.xlsx.writeFile(`./uploads/${filename}`);
