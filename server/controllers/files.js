@@ -2,16 +2,20 @@ const xlsx = require("xlsx");
 const fs = require("fs");
 const path = require("path");
 const { promisify } = require("util");
-
 const Excel = require("exceljs");
+
+const User = require("./../models/user");
 
 exports.getFile = async (req, res) => {
   try {
-    const { filename } = req.params;
-    console.log(filename);
+    const filename = `${req.user.id}-${req.params.filename}`;
+
+    if (!req.user.files.includes(filename))
+      return res
+        .status(404)
+        .json({ message: "File has either been deleted or does not exist" });
+
     const file = xlsx.readFile(`./uploads/${filename}`);
-    const sheets = file.SheetNames;
-    let data = [];
     const temp = xlsx.utils.sheet_to_csv(file.Sheets["Sheet1"]);
     res.status(200).json({ file: temp, filename });
   } catch (error) {
@@ -20,11 +24,27 @@ exports.getFile = async (req, res) => {
   }
 };
 
+exports.uploadFile = async (req, res) => {
+  try {
+    const file = req.file;
+
+    await User.findByIdAndUpdate(req.user._id, {
+      $push: { files: `${req.user.id}-${file.originalname}` },
+    });
+
+    res.status(200).json({ message: "Uploaded file successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong." });
+  }
+};
+
 exports.getFileList = async (req, res) => {
   try {
     fs.readdir("./uploads", (err, files) => {
-      console.log(files);
-      res.status(200).json({ files });
+      const filesAllowed = files.filter((file) =>
+        req.user.files.includes(file)
+      );
+      res.status(200).json({ files: filesAllowed });
     });
   } catch (error) {
     console.log(error);
@@ -34,14 +54,25 @@ exports.getFileList = async (req, res) => {
 
 exports.updateFileContent = async (req, res) => {
   try {
-    const { filename, newFileData, rowsToDelete, rowsToInsert, colToDelete } =
-      req.body;
+    const {
+      filename,
+      newFileData,
+      rowsToDelete,
+      rowsToInsert,
+      colToDelete,
+      rowsToDuplicate,
+      colsToInsert,
+    } = req.body;
+
+    console.log(req.body);
 
     if (
       newFileData.length === 0 &&
       rowsToDelete.length === 0 &&
       rowsToInsert.length === 0 &&
-      colToDelete.length === 0
+      colToDelete.length === 0 &&
+      colsToInsert.length === 0 &&
+      rowsToDuplicate.length === 0
     ) {
       return res.status(200).json({ message: "File already up-to-date" });
     }
@@ -50,25 +81,43 @@ exports.updateFileContent = async (req, res) => {
     workbook = await workbook.xlsx.readFile(`./uploads/${filename}`);
     let worksheet = workbook.getWorksheet("Sheet1");
 
-    newFileData.forEach((fileData) => {
-      worksheet
-        .getRow(fileData.rowNumber + 1)
-        .getCell(fileData.colNumber + 1).value = fileData.value;
-    });
+    if (rowsToDuplicate)
+      rowsToDuplicate.forEach((rowData) => {
+        worksheet.spliceRows(
+          rowData.rowNumber,
+          1,
+          rowData.rowValues,
+          rowData.rowValues
+        );
+      });
 
-    console.log({ rowsToInsert });
-    rowsToInsert.forEach((rowValue) => {
-      //insert at 7 hence 7 becomes empty and the rows 7 and below are shifted one row down.
-      worksheet.spliceRows(rowValue + 2, 0, [""]);
-    });
+    if (colsToInsert)
+      colsToInsert.forEach((col) => {
+        worksheet.spliceColumns(col, 0, []);
+      });
 
-    rowsToDelete.forEach((rowValue) => {
-      worksheet.spliceRows(rowValue, 1);
-    });
+    if (newFileData)
+      newFileData.forEach((fileData) => {
+        worksheet
+          .getRow(fileData.rowNumber + 1)
+          .getCell(fileData.colNumber + 1).value = fileData.value;
+      });
 
-    colToDelete.forEach((colValue) => {
-      worksheet.spliceColumns(colValue + 1, 1);
-    });
+    if (rowsToInsert)
+      rowsToInsert.forEach((rowValue) => {
+        //insert at 7 hence 7 becomes empty and the rows 7 and below are shifted one row down.
+        worksheet.spliceRows(rowValue + 2, 0, [""]);
+      });
+
+    if (rowsToDelete)
+      rowsToDelete.forEach((rowValue) => {
+        worksheet.spliceRows(rowValue, 1);
+      });
+
+    if (colToDelete)
+      colToDelete.forEach((colValue) => {
+        worksheet.spliceColumns(colValue + 1, 1);
+      });
 
     workbook.xlsx.writeFile(`./uploads/${filename}`);
     res.status(201).json({ message: "Updated the worksheet successfully!" });
