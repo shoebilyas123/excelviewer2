@@ -1,20 +1,20 @@
-const User = require("../models/user");
-const { verify, sign } = require("jsonwebtoken");
+const User = require('../models/user');
+const { verify, sign } = require('jsonwebtoken');
 
 exports.protect = async (req, res, next) => {
   let token = null;
 
   if (
-    req.headers["authorization"] &&
-    req.headers["authorization"].split(" ")[0] === "Bearer"
+    req.headers['authorization'] &&
+    req.headers['authorization'].split(' ')[0] === 'Bearer'
   ) {
-    token = req.headers["authorization"].split(" ")[1];
+    token = req.headers['authorization'].split(' ')[1];
 
     const { id, iat, exp } = this.verify(token);
 
     if (Date.now() - iat * 1000 > exp) {
       res.status(401).json({
-        message: "Your session has expired. Please log in again.",
+        message: 'Your session has expired. Please log in again.',
       });
       return;
     }
@@ -22,7 +22,7 @@ exports.protect = async (req, res, next) => {
     const user = await User.findById(id);
     if (!user) {
       res.status(401).json({
-        message: "User has either been deleted or does not exist",
+        message: 'User has either been deleted or does not exist',
       });
       return;
     }
@@ -30,7 +30,7 @@ exports.protect = async (req, res, next) => {
     req.user = user;
     next();
   } else {
-    res.status(401).json({ message: "Not authorized" });
+    res.status(401).json({ message: 'Not authorized' });
   }
 };
 

@@ -1,10 +1,10 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import "./App.css";
-import Login from "./Routes/Auth/Login";
-import Register from "./Routes/Auth/Register";
-import Home from "./Routes/Home";
+import './App.css';
+import Login from './Routes/Auth/Login';
+import Register from './Routes/Auth/Register';
+import Home from './Routes/Home';
 
 function App() {
   return (
