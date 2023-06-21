@@ -22,7 +22,7 @@ Users should be able to:
 - Upload, edit and then save the XLSX files after editing.
 
 ### Screenshots
-
+![](./excel_viewer_ss.png)
 
 <!-- ###Links LINKS HERE -->
 ## My process
