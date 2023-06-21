@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 // @ts-ignore
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { toast } from "react-toastify";
-import { AiOutlineReload } from "react-icons/ai";
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { toast } from 'react-toastify';
+import { AiOutlineReload } from 'react-icons/ai';
 
-import useLoading from "../../Hooks/useLoading";
-import Cell from "./Cell";
-import downloadFile from "../../API/Files/downloadFile";
-import RowNumCell from "./CellRowNum";
-import Button from "../Button";
-import { ISelectCell } from "../../Interfaces/Cell";
-import CellColHead from "./CellColHead";
-import saveFile from "../../API/Files/saveFile";
-import Spinner from "../Spinner";
-import { RowDropdown } from "../Dropdown";
-import ColDropdown from "../Dropdown/ColDropdown";
-import { useSelector } from "react-redux";
-import { RootState } from "../../Store/store";
+import useLoading from '../../Hooks/useLoading';
+import Cell from './Cell';
+import downloadFile from '../../API/Files/downloadFile';
+import RowNumCell from './CellRowNum';
+import Button from '../Button';
+import { ISelectCell } from '../../Interfaces/Cell';
+import CellColHead from './CellColHead';
+import saveFile from '../../API/Files/saveFile';
+import Spinner from '../Spinner';
+import { RowDropdown } from '../Dropdown';
+import ColDropdown from '../Dropdown/ColDropdown';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../Store/store';
 
 interface IProps {
   fileData: {
@@ -64,13 +64,15 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
   const parentRef = React.useRef<any>();
 
   const rowVirtualizer = useVirtualizer({
-    count: 1000,
+    count:
+      fileData.file.split('\n').map((str: string) => str.split(',')).length +
+      10,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 35,
   });
 
-  document.body.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
+  document.body.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
       if (
         selectedCell &&
         selectedCell?.rowNumber > -1 &&
@@ -114,14 +116,14 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
     setSelectedCell({
       rowNumber: -1,
       colNumber: -1,
-      value: "",
+      value: '',
       isInput: false,
     });
 
   const formatData = () => {
     startLoading();
     let tempData: any = [];
-    tempData = fileData.file.split("\n").map((str: string) => str.split(","));
+    tempData = fileData.file.split('\n').map((str: string) => str.split(','));
     setData(tempData);
     stopLoading();
   };
@@ -174,11 +176,12 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
   const onValueChangeHandler = (params: ISelectCell) => {
     const { rowNumber, colNumber, value } = params;
     let tempData = data;
+    // console.log({ rowNumber, colNumber, value, L: tempData.length });
 
     if (rowNumber > tempData.length) {
       let r = tempData.length;
 
-      while (r < rowNumber) {
+      while (r <= rowNumber) {
         tempData.push([]);
         r++;
       }
@@ -192,7 +195,7 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
 
       while (i < colNumber) {
         // @ts-ignore
-        tempData[rowNumber].push("");
+        tempData[rowNumber].push('');
         i++;
       }
     }
@@ -234,7 +237,7 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
       if (rowNumber >= data.length) {
         row.push(
           <Cell
-            value={""}
+            value={''}
             rowNumber={rowNumber}
             colNumber={i - 65}
             isSelected={
@@ -256,7 +259,7 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
         row.push(
           <Cell
             value={
-              i - 65 < data[rowNumber].length ? data[rowNumber][i - 65] : ""
+              i - 65 < data[rowNumber].length ? data[rowNumber][i - 65] : ''
             }
             rowNumber={rowNumber}
             colNumber={i - 65}
@@ -288,10 +291,10 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
         key={virtualItem.key}
         className="flex flex-row items-center"
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: 0,
           left: 0,
-          width: "100%",
+          width: '100%',
           height: `${virtualItem.size}px`,
           transform: `translateY(${virtualItem.start}px)`,
         }}
@@ -374,7 +377,7 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
     let tempData = data;
 
     tempData = tempData.map((d) => {
-      d.splice(selectedCol, 0, "");
+      d.splice(selectedCol, 0, '');
       return d;
     });
     setColsToInsert((prev) => [...(prev ? prev : []), selectedCol]);
@@ -386,7 +389,7 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
     let tempData = data;
 
     tempData = tempData.map((d) => {
-      d.splice(selectedCol + 1, 0, "");
+      d.splice(selectedCol + 1, 0, '');
       return d;
     });
 
@@ -436,7 +439,7 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
           ref={parentRef}
           style={{
             height: `90vh`,
-            overflow: "auto", // Make it scroll!
+            overflow: 'auto', // Make it scroll!
           }}
           // className="h-screen"
         >
@@ -444,8 +447,8 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
           <div
             style={{
               height: `${rowVirtualizer.getTotalSize()}px`,
-              width: "100%",
-              position: "relative",
+              width: '100%',
+              position: 'relative',
             }}
           >
             <>{data.length !== 0 && renderTable()}</>
