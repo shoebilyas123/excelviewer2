@@ -16,7 +16,15 @@ exports.getFile = async (req, res) => {
         .json({ message: 'File has either been deleted or does not exist' });
 
     const file = xlsx.readFile(`./uploads/${filename}`);
-    const temp = xlsx.utils.sheet_to_csv(file.Sheets[file.SheetNames[0]]);
+    // const temp = xlsx.utils.sheet_to_csv(file.Sheets[file.SheetNames[0]]);
+    const temp = [];
+    file.SheetNames.forEach((sN) => {
+      temp.push({
+        ws: sN,
+        data: xlsx.utils.sheet_to_csv(file.Sheets[sN]).toString(),
+      });
+    });
+
     res.status(200).json({ file: temp, filename });
   } catch (error) {
     console.log(error);
@@ -62,9 +70,8 @@ exports.updateFileContent = async (req, res) => {
       colToDelete,
       rowsToDuplicate,
       colsToInsert,
+      sheetName,
     } = req.body;
-
-    console.log(req.body);
 
     if (
       newFileData?.length === 0 &&
@@ -79,7 +86,10 @@ exports.updateFileContent = async (req, res) => {
 
     let workbook = new Excel.Workbook();
     workbook = await workbook.xlsx.readFile(`./uploads/${filename}`);
-    let worksheet = workbook.getWorksheet(workbook.worksheets[0].name);
+
+    if (!workbook.worksheets.map(({ name }) => name).includes(sheetName))
+      return res.json({ message: 'Sheet not present' });
+    let worksheet = workbook.getWorksheet(sheetName);
 
     if (rowsToDuplicate)
       rowsToDuplicate.forEach((rowData) => {

@@ -23,6 +23,7 @@ interface IProps {
     filename: string;
     file: any;
   };
+  sheetName: string;
   onCloseFile: () => void;
   onReload: (fName: string) => void;
 }
@@ -40,7 +41,13 @@ interface IRowRenderParams {
   rowNumber: number;
 }
 
-const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
+const Editor: React.FC<IProps> = ({
+  sheetName,
+  fileData,
+  onCloseFile,
+  onReload,
+}) => {
+  console.log({ fileData });
   const [selectedCell, setSelectedCell] = useState<ISelectedCell>();
   const { loading, startLoading, stopLoading } = useLoading();
   const [data, setData] = useState<(string[] | number[])[]>([]);
@@ -89,6 +96,7 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
 
       const { data } = await saveFile({
         filename: fileData.filename,
+        sheetName,
         newFileData: editedCells,
         rowsToDelete: rowsToDelete,
         rowsToInsert,
@@ -415,7 +423,7 @@ const Editor: React.FC<IProps> = ({ fileData, onCloseFile, onReload }) => {
           onInsertColAfter={insertColumnAfter}
         />
       )}
-      <div className="w-full z-9">
+      <div className="w-full">
         <div className="relative w-full bg-gradient-to-t from-slate-200 to-slate-100 shadow-sm text-xl flex items-center justify-center py-3 ">
           {fileData.filename.substring(25)}
           <div className="absolute left-2 flex items-center space-x-2 ">

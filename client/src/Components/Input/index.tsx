@@ -1,15 +1,24 @@
-import React from "react";
+import React from 'react';
 
 interface IProps extends React.HTMLProps<HTMLInputElement> {}
 
-const Input: React.FC<IProps> = ({ value, onChange, className, type }) => {
+const Input: React.FC<IProps> = ({
+  value,
+  onChange,
+  className,
+  type,
+  label,
+}) => {
   return (
-    <input
-      className="p-2 m-1 border rounded outline-none border-zinc-400 bg-zinc-50 "
-      value={value}
-      onChange={onChange}
-      type={type}
-    />
+    <>
+      {label && <label className="text-zinc-500 ml-2">{label}</label>}
+      <input
+        className="p-2 m-1 border rounded-md outline-none border-zinc-200 bg-zinc-50 "
+        value={value}
+        onChange={onChange}
+        type={type}
+      />
+    </>
   );
 };
 

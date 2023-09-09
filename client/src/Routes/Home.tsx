@@ -1,15 +1,16 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import downloadFile from "../API/Files/downloadFile";
-import getFileList from "../API/Files/getFileList";
-import Editor from "../Components/Editor";
-import Sidebar from "../Components/Sidebar";
-import Spinner from "../Components/Spinner";
-import { getConfig } from "../Helpers/auth";
-import useLoading from "../Hooks/useLoading";
-import { RootState } from "../Store/store";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import downloadFile from '../API/Files/downloadFile';
+import getFileList from '../API/Files/getFileList';
+import Editor from '../Components/Editor';
+import Sidebar from '../Components/Sidebar';
+import Spinner from '../Components/Spinner';
+import { getConfig } from '../Helpers/auth';
+import useLoading from '../Hooks/useLoading';
+import { RootState } from '../Store/store';
+import EditorWrapper from '../Components/Editor/EditorWrapper';
 
 const Home = () => {
   const { loading, startLoading, stopLoading } = useLoading();
@@ -20,9 +21,9 @@ const Home = () => {
 
   React.useEffect(() => {
     if (!accessToken) {
-      navigate("/register");
+      navigate('/register');
     } else {
-      toast.success(`Logged in as ${name}`, { position: "bottom-right" });
+      toast.success(`Logged in as ${name}`, { position: 'bottom-right' });
     }
   }, [accessToken]);
 
@@ -69,18 +70,26 @@ const Home = () => {
       )}
       <div
         className={`w-full overflow-hidden flex ${
-          (loading || !fileData) && "items-center justify-center"
+          (loading || !fileData) && 'items-center justify-center'
         }`}
       >
         {!fileData || loading ? (
           <div className="text-xl font-bold text-zinc-700">
-            {loading ? <Spinner /> : "No File Selected"}
+            {loading ? <Spinner /> : 'No File Selected'}
           </div>
         ) : (
-          <Editor
-            fileData={fileData}
-            onCloseFile={closeFileHandler}
-            onReload={(fName: string) => downloadFileHandler(fName)}
+          // <Editor
+          //   fileData={fileData}
+          //   onCloseFile={closeFileHandler}
+          //   onReload={(fName: string) => downloadFileHandler(fName)}
+          // />
+          <EditorWrapper
+            filename={fileData.filename}
+            fileData={fileData.file}
+            {...{
+              onReload: (fName: string) => downloadFileHandler(fName),
+              onCloseFile: closeFileHandler,
+            }}
           />
         )}
       </div>

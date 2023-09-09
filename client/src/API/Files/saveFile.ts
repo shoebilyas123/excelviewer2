@@ -1,5 +1,5 @@
-import axios from "axios";
-import { format } from "path";
+import axios from 'axios';
+import { format } from 'path';
 
 interface IParams {
   newFileData: any;
@@ -10,6 +10,7 @@ interface IParams {
   config: {
     headers: { authorization: string };
   };
+  sheetName: string;
   rowsToDuplicate: any;
   colsToInsert: Array<number>;
 }
@@ -23,10 +24,11 @@ const saveFile = async (payload: IParams) => {
     rowsToDuplicate,
     colsToInsert,
     config,
+    sheetName,
   } = payload;
 
   return axios.post(
-    "http://localhost:8000/api/v1/files/save",
+    'http://localhost:8000/api/v1/files/save',
     {
       filename,
       newFileData,
@@ -35,6 +37,7 @@ const saveFile = async (payload: IParams) => {
       colToDelete,
       rowsToDuplicate,
       colsToInsert,
+      sheetName,
     },
     config
   );
