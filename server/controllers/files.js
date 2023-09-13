@@ -1,7 +1,6 @@
 const xlsx = require('xlsx');
 const fs = require('fs');
 const path = require('path');
-const { promisify } = require('util');
 const Excel = require('exceljs');
 
 const User = require('./../models/user');
@@ -9,7 +8,6 @@ const User = require('./../models/user');
 exports.getFile = async (req, res) => {
   try {
     const filename = `${req.user.id}-${req.params.filename}`;
-    console.log({ filename });
     if (!req.user.files.includes(filename))
       return res
         .status(404)

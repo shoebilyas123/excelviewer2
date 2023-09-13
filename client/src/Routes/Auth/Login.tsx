@@ -1,12 +1,14 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Button from "../../Components/Button";
-import Input from "../../Components/Input";
-import Spinner from "../../Components/Spinner";
-import { IRegisterParams } from "../../Interfaces/auth";
-import { login } from "../../Store/Slice/auth";
-import { RootState } from "../../Store/store";
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Button from '../../Components/Button';
+import Input from '../../Components/Input';
+import Spinner from '../../Components/Spinner';
+import { IRegisterParams } from '../../Interfaces/auth';
+import { login } from '../../Store/Slice/auth';
+import { RootState } from '../../Store/store';
+
+type IOnChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => void;
 
 const Login = () => {
   const [userInfo, setUserInfo] = React.useState<IRegisterParams>();
@@ -16,16 +18,16 @@ const Login = () => {
 
   React.useEffect(() => {
     if (authState?.user?.accessToken) {
-      navigate("/");
+      navigate('/');
     }
   }, [authState]);
 
-  const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const emailChangeHandler: IOnChangeHandler = (e) => {
     // @ts-ignore
     setUserInfo((prev) => ({ ...prev, email: e.target.value }));
   };
 
-  const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const passwordChangeHandler: IOnChangeHandler = (e) => {
     // @ts-ignore
     setUserInfo((prev) => ({ ...prev, password: e.target.value }));
   };
@@ -57,10 +59,10 @@ const Login = () => {
             {authState.authLoading && <Spinner />} <p>Login</p>
           </Button>
           <p>
-            Don't have an account?{" "}
+            Don't have an account?{' '}
             <a
               className="cursor-pointer text-green-700 hover:text-green-800"
-              onClick={() => navigate("/register")}
+              onClick={() => navigate('/register')}
             >
               Register
             </a>
