@@ -1,6 +1,6 @@
 # Basic Excel Viewer v2 - Google Sheets Clone
 
-## Table of contents
+## Table of content
 
 - [Overview](#overview)
   - [The challenge](#the-challenge)
@@ -22,14 +22,16 @@ Users should be able to:
 - Upload, edit and then save the XLSX files after editing.
 
 ### Screenshots
+
 ![](./excel_viewer_ss.png)
 
 <!-- ###Links LINKS HERE -->
+
 ## My process
 
 ### Built with
 
-- Frontend - ReactJS and TailwindCSS 
+- Frontend - ReactJS and TailwindCSS
 - Backend - Nodejs, Express MongoDB
 - XLSX Library for parsing XLSX files.
 
@@ -38,8 +40,8 @@ Users should be able to:
 - [XLSX Docs](https://www.npmjs.com/package/xlsx) - Official documentation for XLSX library.
 
 ### Project Setup
+
 - Clone the project
 - Run `npm install` in client as well as server folder.
 - Add your envs as given in the .env.example file.
 - In the root directory, run `npm run start`. It will run your backend and as well as frontend using concurrently.
-
