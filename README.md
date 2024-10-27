@@ -34,7 +34,7 @@ Users should be able to:
 - Frontend - ReactJS and TailwindCSS
 - Backend - Nodejs, Express MongoDB
 - XLSX Library for parsing XLSX files.
-
+- Tanstack Virtual - for handling large amounts of data
 ### Useful resources
 
 - [XLSX Docs](https://www.npmjs.com/package/xlsx) - Official documentation for XLSX library.
