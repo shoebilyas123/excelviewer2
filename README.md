@@ -1,12 +1,13 @@
-# Basic Excel Viewer v2 - Google Sheets Clone
+# Basic Excel Viewer
+Optimized to import, view, edit and save spreadsheet with large amounts of data.
 
 ## Table of content
 
 - [Overview](#overview)
-  - [The challenge](#the-challenge)
+  - [User Story](#user-story)
   - [Screenshot](#screenshot)
   - [Links](#links)
-- [My process](#my-process)
+- [Development](#developmment)
   - [Built with](#built-with)
   - [Useful resources](#useful-resources)
 - [Author](#author)
@@ -14,10 +15,10 @@
 
 ## Overview
 
-### The challenge
+### User Story
 
 Users should be able to:
-
+- Create an account.
 - Create new XLSX sheets.
 - Upload, edit and then save the XLSX files after editing.
 
@@ -27,7 +28,7 @@ Users should be able to:
 
 <!-- ###Links LINKS HERE -->
 
-## My process
+## Development
 
 ### Built with
 
